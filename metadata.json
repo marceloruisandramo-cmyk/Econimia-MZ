@@ -1,0 +1,6 @@
+{
+  "name": "Notícias de Economia",
+  "description": "Portal completo de notícias econômicas, cotações em tempo real, análises de mercado, indicadores e finanças.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
