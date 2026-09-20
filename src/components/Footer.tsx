@@ -13,14 +13,24 @@ export const Footer: React.FC<FooterProps> = ({ onSelectCategory }) => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800">
           {/* Brand Info */}
           <div className="md:col-span-1 space-y-3">
-            <div className="flex items-center gap-2 text-white">
-              <div className="w-7 h-7 rounded-md bg-amber-500 text-slate-950 flex items-center justify-center font-black">
+            <button
+              onClick={() => {
+                try {
+                  window.location.reload();
+                } catch {
+                  window.location.href = window.location.href;
+                }
+              }}
+              title="Clique para recarregar a página"
+              className="flex items-center gap-2 text-white hover:opacity-85 transition-opacity text-left cursor-pointer group"
+            >
+              <div className="w-7 h-7 rounded-md bg-amber-500 text-slate-950 flex items-center justify-center font-black group-hover:rotate-12 transition-transform">
                 <TrendingUp className="w-4 h-4" />
               </div>
               <span className="font-serif font-black text-lg text-white uppercase tracking-tight">
                 Notícias de Economia
               </span>
-            </div>
+            </button>
             <p className="text-slate-400 text-xs leading-relaxed">
               Jornalismo econômico e financeiro com rigor técnico, dados em tempo real e análises independentes sobre os rumos dos mercados no Brasil e no mundo.
             </p>

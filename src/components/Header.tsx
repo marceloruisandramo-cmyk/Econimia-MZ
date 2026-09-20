@@ -1,5 +1,5 @@
-import React from 'react';
-import { Search, Bookmark, Clock, RefreshCw, X, TrendingUp } from 'lucide-react';
+import React, { useState } from 'react';
+import { Search, Bookmark, Clock, RefreshCw, X, RotateCw } from 'lucide-react';
 import { NewsCategory } from '../types';
 import { CATEGORIES_LIST } from '../data/mockData';
 
@@ -26,6 +26,19 @@ export const Header: React.FC<HeaderProps> = ({
   isRefreshing,
   marketOpen,
 }) => {
+  const [isReloadingPage, setIsReloadingPage] = useState(false);
+
+  // Fast and precise page reload handler
+  const handleReloadPage = () => {
+    setIsReloadingPage(true);
+    // Instant feedback then reload
+    try {
+      window.location.reload();
+    } catch {
+      window.location.href = window.location.href;
+    }
+  };
+
   // Format current Brazilian date
   const todayFormatted = new Intl.DateTimeFormat('pt-BR', {
     weekday: 'long',
@@ -94,19 +107,74 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* Main Masthead Banner */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-          {/* Logo & Subtitle */}
+          {/* Logo as Page Reload Button */}
           <div className="text-center md:text-left">
-            <div className="inline-flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center text-amber-400 shadow-sm">
-                <TrendingUp className="w-5 h-5" />
+            <button
+              id="reload-page-logo-btn"
+              onClick={handleReloadPage}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleReloadPage();
+                }
+              }}
+              title="Clique para atualizar / recarregar a página"
+              aria-label="Atualizar página - Recarregar Notícias de Economia"
+              className="group relative inline-flex items-center gap-3 p-1.5 -ml-1.5 rounded-xl hover:bg-slate-100/80 active:scale-[0.98] transition-all cursor-pointer border border-transparent hover:border-slate-200 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:ring-offset-2"
+            >
+              {/* Image from attachment acting as reload button */}
+              <div className="relative flex items-center justify-center">
+                <img
+                  src="/noticias-de-economia-logo.svg"
+                  alt="NOTÍCIAS DE ECONOMIA"
+                  className={`h-12 sm:h-14 md:h-16 w-auto object-contain transition-transform duration-300 ${
+                    isReloadingPage ? 'opacity-50 scale-95' : 'group-hover:scale-[1.02]'
+                  }`}
+                  onError={(e) => {
+                    // Fallback to text if SVG load fails
+                    e.currentTarget.style.display = 'none';
+                    const fallbackEl = document.getElementById('logo-text-fallback');
+                    if (fallbackEl) fallbackEl.classList.remove('hidden');
+                  }}
+                />
+
+                {/* Text Fallback in case SVG fails */}
+                <div id="logo-text-fallback" className="hidden text-center leading-tight">
+                  <span className="block text-lg sm:text-xl font-serif font-black tracking-wider text-slate-950">
+                    NOTÍCIAS DE
+                  </span>
+                  <span className="block text-2xl sm:text-3xl font-serif font-black tracking-wider text-slate-950">
+                    ECONOMIA
+                  </span>
+                </div>
+
+                {/* Reload Hover / Loading Overlay Badge */}
+                <div
+                  className={`absolute -right-2 -top-1 sm:-right-3 sm:top-0 bg-slate-900 text-amber-400 p-1.5 rounded-full shadow-md transition-all duration-200 ${
+                    isReloadingPage
+                      ? 'opacity-100 scale-110 animate-spin bg-amber-500 text-slate-950'
+                      : 'opacity-0 group-hover:opacity-100 group-hover:scale-100 scale-75'
+                  }`}
+                  title="Atualizar página"
+                >
+                  <RotateCw className={`w-3.5 h-3.5 ${isReloadingPage ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-500'}`} />
+                </div>
               </div>
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight text-slate-950 uppercase font-serif">
-                Notícias de Economia
-              </h1>
-            </div>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 font-medium">
+
+              {/* Reload action hint */}
+              <div className="hidden sm:flex flex-col text-left pl-1 border-l border-slate-200">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 group-hover:text-amber-700 transition-colors flex items-center gap-1">
+                  <RotateCw className="w-2.5 h-2.5 group-hover:rotate-180 transition-transform duration-500" />
+                  {isReloadingPage ? 'Atualizando...' : 'Recarregar'}
+                </span>
+                <span className="text-[11px] text-slate-500 font-medium whitespace-nowrap">
+                  Clique para atualizar a página
+                </span>
+              </div>
+            </button>
+            <p className="text-xs text-slate-500 mt-0.5 font-medium">
               Informação financeira fidedigna, cotações de mercado e análises macroeconômicas
             </p>
           </div>
