@@ -8,3 +8,11 @@
 body {
   font-family: var(--font-sans);
 }
+
+#container-ea0ca15bc39856e45fbbffed13fce244 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem auto;
+  max-width: 100%;
+}
